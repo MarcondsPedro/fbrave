@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   .to([navbar, heroInfo, heroTitle], {
     opacity: 1,
-    stagger: 0.15
+    duration: 1,
+    ease: 'power2.inOut'
   }, '+=0.1');
 
 });
