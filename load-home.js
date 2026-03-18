@@ -1,8 +1,12 @@
-window.scrollTo(0, 0);
-document.documentElement.style.overflow = 'hidden';
-document.body.style.overflow = 'hidden';
-document.documentElement.style.height = '100%';
-document.body.style.height = '100%';
+const hasSeenLoader = sessionStorage.getItem('loaderDone');
+
+if (!hasSeenLoader) {
+  window.scrollTo(0, 0);
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.height = '100%';
+  document.body.style.height = '100%';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -16,12 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!loader || !normalImages.length || !isXImage) return;
 
-  gsap.set('.loader_img-wrap', { perspective: 800 });
-  gsap.set(embed, { y: '105%' });
-  gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
-  gsap.set(isXImage, { visibility: 'hidden' });
-  gsap.set(normalImages, { opacity: 0 });
-
   const middleIdx = Math.floor(normalImages.length / 2);
 
   const fan = [
@@ -31,6 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
     { x: 160, y: 20, rotation: 10, zIndex: 2 },
     { x: 320, y: 50, rotation: 20, zIndex: 1 }
   ];
+
+  if (hasSeenLoader) {
+    skipToEntrance();
+    return;
+  }
+
+  gsap.set('.loader_img-wrap', { perspective: 800 });
+  gsap.set(embed, { y: '105%' });
+  gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
+  gsap.set(isXImage, { visibility: 'hidden' });
+  gsap.set(normalImages, { opacity: 0 });
 
   const blinkOrder = normalImages.filter((_, i) => i !== middleIdx).concat(normalImages[middleIdx]);
 
@@ -89,47 +98,85 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 0);
       });
 
-    tl.addLabel('fanned', '+=0.4');
+      tl.addLabel('fanned', '+=0.4');
 
-    const middleCard = normalImages[middleIdx];
+      tl.to(middleCard, {
+        rotationY: 90,
+        duration: 0.35,
+        ease: 'power3.in',
+        onComplete: () => {
+          gsap.set(middleCard, { visibility: 'hidden' });
+          gsap.set(isXImage, {
+            visibility: 'visible',
+            opacity: 1,
+            x: fan[middleIdx].x,
+            y: fan[middleIdx].y,
+            rotation: fan[middleIdx].rotation,
+            rotationY: -90,
+            zIndex: 10
+          });
+        }
+      }, 'fanned');
 
-    tl.to(middleCard, {
-      rotationY: 90,
-      duration: 0.35,
-      ease: 'power3.in',
-      onComplete: () => {
-        gsap.set(middleCard, { visibility: 'hidden' });
-        gsap.set(isXImage, {
-          visibility: 'visible',
-          opacity: 1,
-          x: fan[middleIdx].x,
-          y: fan[middleIdx].y,
-          rotation: fan[middleIdx].rotation,
-          rotationY: -90,
-          zIndex: 10
-        });
+      tl.to(isXImage, {
+        rotationY: 0,
+        duration: 0.35,
+        ease: 'power3.out'
+      }, 'fanned+=0.35');
+
+      tl.addLabel('revealed', '+=0.4');
+
+      const otherCards = normalImages.filter((_, i) => i !== middleIdx);
+
+      tl.to(otherCards, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'expo.inOut',
+        stagger: { amount: 0.15, from: 'edges' }
+      }, 'revealed');
+
+      if (embed.length) {
+        tl.to(embed, {
+          y: '0%',
+          ease: 'expo.out',
+          duration: 1.2,
+          stagger: { amount: 0.6, from: 'start' }
+        }, 'revealed+=0.2');
       }
-    }, 'fanned');
 
-    tl.to(isXImage, {
-      rotationY: 0,
-      duration: 0.35,
-      ease: 'power3.out'
-    }, 'fanned+=0.35');
+      const fadeEls = [navbar, heroInfo, heroTitle].filter(Boolean);
+      if (fadeEls.length) {
+        tl.to(fadeEls, {
+          opacity: 1,
+          duration: 1,
+          ease: 'power2.inOut'
+        }, 'revealed+=0.4');
+      }
 
-    tl.addLabel('revealed', '+=0.4');
+      tl.add(() => {
+        gsap.set(loader, { pointerEvents: 'none' });
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.documentElement.style.height = '';
+        document.body.style.height = '';
+        sessionStorage.setItem('loaderDone', 'true');
+      }, 'revealed+=0.5');
 
-    const otherCards = normalImages.filter((_, i) => i !== middleIdx);
+    }, 500);
+  }
 
-    tl.to(otherCards, {
-      x: 0,
-      y: 0,
-      rotation: 0,
-      opacity: 0,
-      duration: 0.7,
-      ease: 'expo.inOut',
-      stagger: { amount: 0.15, from: 'edges' }
-    }, 'revealed');
+  function skipToEntrance() {
+    gsap.set(loader, { display: 'none' });
+    gsap.set(normalImages, { opacity: 0 });
+    gsap.set(isXImage, { opacity: 0 });
+
+    gsap.set(embed, { y: '105%' });
+    gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
+
+    const tl = gsap.timeline();
 
     if (embed.length) {
       tl.to(embed, {
@@ -137,27 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: 'expo.out',
         duration: 1.2,
         stagger: { amount: 0.6, from: 'start' }
-      }, 'revealed+=0.2');
+      }, 0);
     }
 
-    const fadeEls = [navbar, heroInfo, heroTitle].filter(Boolean);
+    const fadeEls = [navbar, heroInfo, heroTitle, isXImage].filter(Boolean);
     if (fadeEls.length) {
       tl.to(fadeEls, {
         opacity: 1,
         duration: 1,
         ease: 'power2.inOut'
-      }, 'revealed+=0.4');
+      }, 0.2);
     }
-
-    tl.add(() => {
-      gsap.set(loader, { pointerEvents: 'none' });
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.documentElement.style.height = '';
-      document.body.style.height = '';
-    }, 'revealed+=0.5');
-
-    }, 500);
   }
 
 });
