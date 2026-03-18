@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  const embed = document.querySelector('.fbrave-embed');
+  const embed = document.querySelectorAll('.fbrave-embed');
   const navbar = document.querySelector('.navbar');
   const heroInfo = document.querySelector('.hero_info');
 
-  if (!embed || !navbar || !heroInfo) return;
+  if (!embed.length || !navbar || !heroInfo) return;
 
   gsap.set(embed, { y: '100%', opacity: 0 });
   gsap.set([navbar, heroInfo], { opacity: 0 });
