@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!loader || !normalImages.length || !isXImage) return;
 
   window.scrollTo(0, 0);
+  document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
 
   gsap.set('.loader_img-wrap', { perspective: 800 });
@@ -22,11 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const middleIdx = Math.floor(normalImages.length / 2);
 
   const fan = [
-    { x: -200, y: 40, rotation: -15, zIndex: 1 },
-    { x: -100, y: 15, rotation: -7, zIndex: 2 },
+    { x: -320, y: 50, rotation: -20, zIndex: 1 },
+    { x: -160, y: 20, rotation: -10, zIndex: 2 },
     { x: 0, y: 0, rotation: 0, zIndex: 3 },
-    { x: 100, y: 15, rotation: 7, zIndex: 2 },
-    { x: 200, y: 40, rotation: 15, zIndex: 1 }
+    { x: 160, y: 20, rotation: 10, zIndex: 2 },
+    { x: 320, y: 50, rotation: 20, zIndex: 1 }
   ];
 
   const blinkTl = gsap.timeline({ repeat: -1 });
@@ -68,12 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
         y: fan[i].y,
         rotation: fan[i].rotation,
         zIndex: fan[i].zIndex,
-        duration: 0.8,
-        ease: 'expo.out'
+        duration: 1.2,
+        ease: 'elastic.out(1, 0.75)'
       }, 0);
     });
 
-    tl.addLabel('fanned', '+=0.5');
+    tl.addLabel('fanned', '+=1');
 
     const middleCard = normalImages[middleIdx];
 
@@ -132,12 +133,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 'revealed+=0.4');
     }
 
+    tl.add(() => {
+      document.body.appendChild(isXImage);
+      gsap.set(isXImage, {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        xPercent: -50,
+        yPercent: -50,
+        x: 0,
+        y: 0,
+        rotation: 0,
+        zIndex: 9999
+      });
+    }, 'revealed+=0.3');
+
     tl.to(loader, {
       opacity: 0,
       duration: 0.5,
       ease: 'power2.inOut',
       onComplete: () => {
         gsap.set(loader, { display: 'none' });
+        document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
       }
     }, '-=0.5');
