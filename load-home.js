@@ -59,15 +59,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 3000);
 
   function runOutro() {
+    blinkTl.pause();
     blinkTl.kill();
-    gsap.set(normalImages, { opacity: 0, x: 0, y: 0, rotation: 0 });
+    normalImages.forEach(img => {
+      gsap.killTweensOf(img);
+      img.style.opacity = '0';
+    });
 
-    const tl = gsap.timeline({ delay: 0.5 });
+    setTimeout(() => {
+      const tl = gsap.timeline();
 
-    normalImages.forEach((img, i) => {
-      tl.fromTo(img,
-        { opacity: 1, x: 0, y: 0, rotation: 0 },
-        {
+      normalImages.forEach((img, i) => {
+        img.style.opacity = '1';
+        gsap.set(img, { x: 0, y: 0, rotation: 0 });
+        tl.to(img, {
           x: fan[i].x,
           y: fan[i].y,
           rotation: fan[i].rotation,
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
           duration: 1.2,
           ease: 'elastic.out(1, 0.75)'
         }, 0);
-    });
+      });
 
     tl.addLabel('fanned', '+=0.4');
 
@@ -144,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.style.height = '';
       document.body.style.height = '';
     }, 'revealed+=0.5');
+
+    }, 500);
   }
 
 });
