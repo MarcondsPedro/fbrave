@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tl.to(embed, {
     y: '0%',
-    ease: 'elastic.out(1, 0.75)',
+    ease: 'expo.out',
     duration: 1.2,
     stagger: { amount: 0.6, from: 'start' }
   })
