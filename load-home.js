@@ -32,12 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
     { x: 320, y: 50, rotation: 20, zIndex: 1 }
   ];
 
+  const blinkOrder = normalImages.filter((_, i) => i !== middleIdx).concat(normalImages[middleIdx]);
+
   const blinkTl = gsap.timeline({ repeat: -1 });
-  normalImages.forEach((img, i) => {
+  blinkOrder.forEach((img, i) => {
     blinkTl.set(normalImages, { opacity: 0 }, i * 0.15);
     blinkTl.set(img, { opacity: 1 }, i * 0.15);
   });
-  blinkTl.set(normalImages, { opacity: 0 }, normalImages.length * 0.15);
+  blinkTl.set(normalImages, { opacity: 0 }, blinkOrder.length * 0.15);
 
   let pageLoaded = document.readyState === 'complete';
   let minTimeDone = false;
@@ -66,13 +68,18 @@ document.addEventListener('DOMContentLoaded', () => {
       img.style.opacity = '0';
     });
 
+    const middleCard = normalImages[middleIdx];
+    middleCard.style.opacity = '1';
+    gsap.set(middleCard, { x: 0, y: 0, rotation: 0, zIndex: fan[middleIdx].zIndex });
+
     setTimeout(() => {
       const tl = gsap.timeline();
+      const otherIdxs = normalImages.map((_, i) => i).filter(i => i !== middleIdx);
 
-      normalImages.forEach((img, i) => {
-        img.style.opacity = '1';
-        gsap.set(img, { x: 0, y: 0, rotation: 0 });
-        tl.to(img, {
+      otherIdxs.forEach(i => {
+        normalImages[i].style.opacity = '1';
+        gsap.set(normalImages[i], { x: 0, y: 0, rotation: 0 });
+        tl.to(normalImages[i], {
           x: fan[i].x,
           y: fan[i].y,
           rotation: fan[i].rotation,
