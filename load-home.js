@@ -3,11 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const embed = document.querySelectorAll('.fbrave-embed');
   const navbar = document.querySelector('.navbar');
   const heroInfo = document.querySelector('.hero_info');
+  const heroTitle = document.querySelector('.hero_title');
 
-  if (!embed.length || !navbar || !heroInfo) return;
+  if (!embed.length || !navbar || !heroInfo || !heroTitle) return;
 
   gsap.set(embed, { y: '100%', opacity: 0 });
-  gsap.set([navbar, heroInfo], { opacity: 0 });
+  gsap.set([navbar, heroInfo, heroTitle], { opacity: 0 });
 
   const tl = gsap.timeline({ defaults: { ease: 'expo.inOut', duration: 0.6 } });
 
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     opacity: 1,
     stagger: 0.15
   })
-  .to([navbar, heroInfo], {
+  .to([navbar, heroInfo, heroTitle], {
     opacity: 1,
     stagger: 0.15
   }, '+=0.1');
