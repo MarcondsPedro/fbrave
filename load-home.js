@@ -58,8 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function runOutro() {
     blinkTl.kill();
+    gsap.set(normalImages, { opacity: 0 });
 
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({ delay: 0.3 });
 
     tl.set(normalImages, { opacity: 1 });
 
