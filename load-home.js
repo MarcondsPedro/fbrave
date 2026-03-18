@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 0);
     });
 
-    tl.addLabel('fanned', '+=1');
+    tl.addLabel('fanned', '+=0.4');
 
     const middleCard = normalImages[middleIdx];
 
