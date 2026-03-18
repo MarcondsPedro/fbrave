@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     blinkTl.kill();
     gsap.set(normalImages, { opacity: 0, x: 0, y: 0, rotation: 0 });
 
-    const tl = gsap.timeline({ delay: 0.3 });
+    const tl = gsap.timeline({ delay: 0.5 });
 
     normalImages.forEach((img, i) => {
       tl.fromTo(img,
