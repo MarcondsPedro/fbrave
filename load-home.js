@@ -178,22 +178,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tl = gsap.timeline();
 
+    tl.to(isXImage, {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    }, 0);
+
     if (embed.length) {
       tl.to(embed, {
         y: '0%',
         ease: 'expo.out',
         duration: 1.2,
         stagger: { amount: 0.6, from: 'start' }
-      }, 0);
+      }, 0.4);
     }
 
-    const fadeEls = [navbar, heroInfo, heroTitle, isXImage].filter(Boolean);
+    const fadeEls = [navbar, heroInfo, heroTitle].filter(Boolean);
     if (fadeEls.length) {
       tl.to(fadeEls, {
         opacity: 1,
         duration: 1,
         ease: 'power2.inOut'
-      }, 0.2);
+      }, 0.6);
     }
   }
 
