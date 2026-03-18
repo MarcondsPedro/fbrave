@@ -133,31 +133,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 'revealed+=0.4');
     }
 
-    tl.add(() => {
-      document.body.appendChild(isXImage);
-      gsap.set(isXImage, {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        xPercent: -50,
-        yPercent: -50,
-        x: 0,
-        y: 0,
-        rotation: 0,
-        zIndex: 9999
-      });
-    }, 'revealed+=0.3');
-
     tl.to(loader, {
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut',
+      pointerEvents: 'none',
       onComplete: () => {
-        gsap.set(loader, { display: 'none' });
+        gsap.set(loader, { pointerEvents: 'none' });
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
       }
-    }, '-=0.5');
+    }, 'revealed+=0.5');
   }
 
 });
