@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   tl.to(embed, {
     y: '0%',
     opacity: 1,
-    stagger: 0.15
+    stagger: 0.1
   })
   .to([navbar, heroInfo, heroTitle], {
     opacity: 1,
