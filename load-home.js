@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!loader || !normalImages.length || !isXImage) return;
 
   gsap.set('.loader_img-wrap', { perspective: 800 });
-  gsap.set(embed, { y: '100%' });
+  gsap.set(embed, { y: '105%' });
   gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
   gsap.set(isXImage, { visibility: 'hidden' });
   gsap.set(normalImages, { opacity: 0 });
