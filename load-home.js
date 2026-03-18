@@ -169,10 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function skipToEntrance() {
-    gsap.set(normalImages, { opacity: 0 });
+    gsap.set(normalImages, { display: 'none' });
+    gsap.set(loader, { pointerEvents: 'none' });
     gsap.set(isXImage, { opacity: 0, visibility: 'visible' });
-    loader.parentNode.insertBefore(isXImage, loader);
-    gsap.set(loader, { display: 'none' });
 
     gsap.set(embed, { y: '105%' });
     gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
