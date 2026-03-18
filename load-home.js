@@ -7,14 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!embed.length || !navbar || !heroInfo || !heroTitle) return;
 
-  gsap.set(embed, { y: '100%', opacity: 0 });
+  gsap.set(embed, { y: '100%' });
   gsap.set([navbar, heroInfo, heroTitle], { opacity: 0 });
 
   const tl = gsap.timeline({ defaults: { ease: 'expo.inOut', duration: 0.6 } });
 
   tl.to(embed, {
     y: '0%',
-    opacity: 1,
+    ease: 'elastic.out(1, 0.75)',
+    duration: 1.2,
     stagger: { amount: 0.6, from: 'start' }
   })
   .to([navbar, heroInfo, heroTitle], {
