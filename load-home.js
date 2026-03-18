@@ -1,3 +1,9 @@
+window.scrollTo(0, 0);
+document.documentElement.style.overflow = 'hidden';
+document.body.style.overflow = 'hidden';
+document.documentElement.style.height = '100%';
+document.body.style.height = '100%';
+
 document.addEventListener('DOMContentLoaded', () => {
 
   const loader = document.querySelector('.loader');
@@ -10,14 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!loader || !normalImages.length || !isXImage) return;
 
-  window.scrollTo(0, 0);
-  document.documentElement.style.overflow = 'hidden';
-  document.body.style.overflow = 'hidden';
-
   gsap.set('.loader_img-wrap', { perspective: 800 });
   gsap.set(embed, { y: '100%' });
   gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
-  gsap.set(isXImage, { opacity: 0 });
+  gsap.set(isXImage, { visibility: 'hidden' });
   gsap.set(normalImages, { opacity: 0 });
 
   const middleIdx = Math.floor(normalImages.length / 2);
@@ -58,21 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function runOutro() {
     blinkTl.kill();
-    gsap.set(normalImages, { opacity: 0 });
+    gsap.set(normalImages, { opacity: 0, x: 0, y: 0, rotation: 0 });
 
     const tl = gsap.timeline({ delay: 0.3 });
 
-    tl.set(normalImages, { opacity: 1 });
-
     normalImages.forEach((img, i) => {
-      tl.to(img, {
-        x: fan[i].x,
-        y: fan[i].y,
-        rotation: fan[i].rotation,
-        zIndex: fan[i].zIndex,
-        duration: 1.2,
-        ease: 'elastic.out(1, 0.75)'
-      }, 0);
+      tl.fromTo(img,
+        { opacity: 1, x: 0, y: 0, rotation: 0 },
+        {
+          x: fan[i].x,
+          y: fan[i].y,
+          rotation: fan[i].rotation,
+          zIndex: fan[i].zIndex,
+          duration: 1.2,
+          ease: 'elastic.out(1, 0.75)'
+        }, 0);
     });
 
     tl.addLabel('fanned', '+=0.4');
@@ -84,8 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 0.35,
       ease: 'power3.in',
       onComplete: () => {
-        gsap.set(middleCard, { opacity: 0 });
+        gsap.set(middleCard, { visibility: 'hidden' });
         gsap.set(isXImage, {
+          visibility: 'visible',
           opacity: 1,
           x: fan[middleIdx].x,
           y: fan[middleIdx].y,
@@ -134,13 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 'revealed+=0.4');
     }
 
-    tl.to(loader, {
-      pointerEvents: 'none',
-      onComplete: () => {
-        gsap.set(loader, { pointerEvents: 'none' });
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-      }
+    tl.add(() => {
+      gsap.set(loader, { pointerEvents: 'none' });
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.documentElement.style.height = '';
+      document.body.style.height = '';
     }, 'revealed+=0.5');
   }
 
