@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!filterWrapper || !cmsList) return;
 
   const filterButtons = filterWrapper.querySelectorAll('[data-filter-item]');
-  const cmsItemsWrapper = cmsList.querySelector('.w-dyn-items');
-  const cmsItems = cmsItemsWrapper ? Array.from(cmsItemsWrapper.children) : [];
+  const cmsItems = cmsList.querySelectorAll('.cms-item');
 
   if (!filterButtons.length || !cmsItems.length) return;
 
@@ -32,9 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isAll) {
       cmsItems.forEach(item => {
-        gsap.to(item, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out',
-          onStart: () => gsap.set(item, { display: '' })
-        });
+        gsap.set(item, { display: '' });
+        gsap.to(item, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
       });
       return;
     }
@@ -42,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedTag = getButtonText(activeBtn);
 
     cmsItems.forEach(item => {
-      const tags = item.querySelectorAll('[data-filter-item="tag"]');
+      const tags = item.querySelectorAll('.proj-tag_item');
       const tagTexts = Array.from(tags).map(t => t.textContent.trim().toLowerCase());
       const hasMatch = tagTexts.includes(selectedTag);
 
