@@ -156,14 +156,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 'revealed+=0.4');
       }
 
-      tl.addLabel('done', 'revealed+=2');
-
       if (heroTitle) {
         tl.to(heroTitle, {
           opacity: 1,
           duration: 1,
           ease: 'power2.inOut'
-        }, 'done');
+        }, 'revealed');
       }
 
       tl.add(() => {
