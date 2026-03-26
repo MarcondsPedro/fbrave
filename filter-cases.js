@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!filterWrapper || !cmsList) return;
 
   const filterButtons = filterWrapper.querySelectorAll('[data-filter-item]');
-  const cmsItems = cmsList.querySelectorAll(':scope > .w-dyn-items > .w-dyn-item');
+  const cmsItemsWrapper = cmsList.querySelector('.w-dyn-items');
+  const cmsItems = cmsItemsWrapper ? Array.from(cmsItemsWrapper.children) : [];
 
   if (!filterButtons.length || !cmsItems.length) return;
 
