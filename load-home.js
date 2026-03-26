@@ -156,12 +156,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 'revealed+=0.4');
       }
 
+      tl.addLabel('done', 'revealed+=2');
+
       if (heroTitle) {
         tl.to(heroTitle, {
           opacity: 1,
           duration: 1,
           ease: 'power2.inOut'
-        });
+        }, 'done');
       }
 
       tl.add(() => {
@@ -171,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.height = '';
         document.body.style.height = '';
         sessionStorage.setItem('loaderDone', 'true');
-      }, 'revealed+=0.5');
+      }, 'done+=0.5');
 
     }, 500);
   }
