@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!filterWrapper || !cmsList) return;
 
   const filterButtons = filterWrapper.querySelectorAll('[data-filter-item]');
-  const cmsItems = cmsList.querySelectorAll('.w-dyn-item');
+  const cmsItems = cmsList.querySelectorAll(':scope > .w-dyn-items > .w-dyn-item');
 
   if (!filterButtons.length || !cmsItems.length) return;
 
@@ -46,9 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const hasMatch = tagTexts.includes(selectedTag);
 
       if (hasMatch) {
-        gsap.to(item, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out',
-          onStart: () => gsap.set(item, { display: '' })
-        });
+        gsap.set(item, { display: '' });
+        gsap.to(item, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
       } else {
         gsap.to(item, { opacity: 0, scale: 0.95, duration: 0.3, ease: 'power2.in',
           onComplete: () => gsap.set(item, { display: 'none' })
