@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ease: 'expo.out',
           duration: 1.2,
           stagger: { amount: 0.6, from: 'start' }
-        }, 'revealed+=0.2');
+        }, 'revealed');
       }
 
       const fadeEls = [navbar, heroInfo].filter(Boolean);
