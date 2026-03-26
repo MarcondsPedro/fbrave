@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   gsap.set('.loader_img-wrap', { perspective: 800 });
-  gsap.set(embed, { y: '105%' });
+  gsap.set(embed, { y: '105%', visibility: 'hidden' });
   gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
   gsap.set(isXImage, { visibility: 'hidden' });
   gsap.set(normalImages, { opacity: 0 });
@@ -139,12 +139,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 'revealed');
 
       if (embed.length) {
+        tl.set(embed, { visibility: 'visible', y: '105%' }, 'revealed+=0.4');
         tl.to(embed, {
           y: '0%',
           ease: 'expo.out',
           duration: 1.2,
           stagger: { amount: 0.6, from: 'start' }
-        }, 'revealed');
+        }, 'revealed+=0.4');
       }
 
       const fadeEls = [navbar, heroInfo].filter(Boolean);
