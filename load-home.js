@@ -147,13 +147,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 'revealed+=0.2');
       }
 
-      const fadeEls = [navbar, heroInfo, heroTitle].filter(Boolean);
+      const fadeEls = [navbar, heroInfo].filter(Boolean);
       if (fadeEls.length) {
         tl.to(fadeEls, {
           opacity: 1,
           duration: 1,
           ease: 'power2.inOut'
         }, 'revealed+=0.4');
+      }
+
+      if (heroTitle) {
+        tl.to(heroTitle, {
+          opacity: 1,
+          duration: 1,
+          ease: 'power2.inOut'
+        });
       }
 
       tl.add(() => {
