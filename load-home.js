@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startLoop() {
     const middleCard = normalImages[middleIdx];
-    const otherIdxs = normalImages.map((_, i) => i).filter(i => i !== middleIdx);
+    const otherCards = normalImages.filter((_, i) => i !== middleIdx);
 
     function playLoop() {
       const loop = gsap.timeline({
@@ -187,16 +187,19 @@ document.addEventListener('DOMContentLoaded', () => {
         onComplete: playLoop
       });
 
+      normalImages.forEach(img => {
+        gsap.set(img, { opacity: 0, visibility: 'hidden', x: 0, y: 0, rotation: 0, rotationY: 0 });
+      });
+
       loop.to(isXImage, {
         rotationY: 90,
         duration: 0.35,
         ease: 'power3.in',
         onComplete: () => {
-          gsap.set(isXImage, { visibility: 'hidden' });
+          gsap.set(isXImage, { visibility: 'hidden', rotationY: 0 });
           gsap.set(middleCard, {
             visibility: 'visible',
             opacity: 1,
-            x: 0, y: 0, rotation: 0,
             rotationY: -90,
             zIndex: fan[middleIdx].zIndex
           });
@@ -209,44 +212,47 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: 'power3.out'
       });
 
-      otherIdxs.forEach(i => {
-        gsap.set(normalImages[i], { opacity: 1, visibility: 'visible', x: 0, y: 0, rotation: 0 });
-        loop.to(normalImages[i], {
+      loop.addLabel('fanOpen');
+
+      otherCards.forEach((img, idx) => {
+        const i = normalImages.indexOf(img);
+        loop.set(img, { opacity: 1, visibility: 'visible', x: 0, y: 0, rotation: 0 }, 'fanOpen');
+        loop.to(img, {
           x: fan[i].x,
           y: fan[i].y,
           rotation: fan[i].rotation,
           zIndex: fan[i].zIndex,
           duration: 1.2,
           ease: 'elastic.out(1, 0.75)'
-        }, '<');
+        }, 'fanOpen');
       });
 
       loop.addLabel('hold', '+=0.8');
 
-      otherIdxs.forEach(i => {
-        loop.to(normalImages[i], {
-          x: 0, y: 0, rotation: 0,
+      otherCards.forEach(img => {
+        loop.to(img, {
+          x: 0, y: 0, rotation: 0, opacity: 0,
           duration: 0.6,
           ease: 'expo.inOut'
         }, 'hold');
       });
+
+      loop.addLabel('flipBack', 'hold+=0.5');
 
       loop.to(middleCard, {
         rotationY: 90,
         duration: 0.35,
         ease: 'power3.in',
         onComplete: () => {
-          gsap.set(middleCard, { visibility: 'hidden' });
-          normalImages.forEach((img, i) => {
-            if (i !== middleIdx) gsap.set(img, { opacity: 0, visibility: 'hidden' });
-          });
+          gsap.set(middleCard, { visibility: 'hidden', opacity: 0, rotationY: 0 });
           gsap.set(isXImage, {
             visibility: 'visible',
+            opacity: 1,
             rotationY: -90,
             zIndex: 10
           });
         }
-      }, 'hold+=0.5');
+      }, 'flipBack');
 
       loop.to(isXImage, {
         rotationY: 0,
