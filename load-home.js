@@ -171,9 +171,91 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.height = '';
         document.body.style.height = '';
         sessionStorage.setItem('loaderDone', 'true');
+        startLoop();
       }, 'done+=0.5');
 
     }, 500);
+  }
+
+  function startLoop() {
+    const middleCard = normalImages[middleIdx];
+    const otherIdxs = normalImages.map((_, i) => i).filter(i => i !== middleIdx);
+
+    function playLoop() {
+      const loop = gsap.timeline({
+        delay: 3,
+        onComplete: playLoop
+      });
+
+      loop.to(isXImage, {
+        rotationY: 90,
+        duration: 0.35,
+        ease: 'power3.in',
+        onComplete: () => {
+          gsap.set(isXImage, { visibility: 'hidden' });
+          gsap.set(middleCard, {
+            visibility: 'visible',
+            opacity: 1,
+            x: 0, y: 0, rotation: 0,
+            rotationY: -90,
+            zIndex: fan[middleIdx].zIndex
+          });
+        }
+      });
+
+      loop.to(middleCard, {
+        rotationY: 0,
+        duration: 0.35,
+        ease: 'power3.out'
+      });
+
+      otherIdxs.forEach(i => {
+        gsap.set(normalImages[i], { opacity: 1, visibility: 'visible', x: 0, y: 0, rotation: 0 });
+        loop.to(normalImages[i], {
+          x: fan[i].x,
+          y: fan[i].y,
+          rotation: fan[i].rotation,
+          zIndex: fan[i].zIndex,
+          duration: 1.2,
+          ease: 'elastic.out(1, 0.75)'
+        }, '<');
+      });
+
+      loop.addLabel('hold', '+=0.8');
+
+      otherIdxs.forEach(i => {
+        loop.to(normalImages[i], {
+          x: 0, y: 0, rotation: 0,
+          duration: 0.6,
+          ease: 'expo.inOut'
+        }, 'hold');
+      });
+
+      loop.to(middleCard, {
+        rotationY: 90,
+        duration: 0.35,
+        ease: 'power3.in',
+        onComplete: () => {
+          gsap.set(middleCard, { visibility: 'hidden' });
+          normalImages.forEach((img, i) => {
+            if (i !== middleIdx) gsap.set(img, { opacity: 0, visibility: 'hidden' });
+          });
+          gsap.set(isXImage, {
+            visibility: 'visible',
+            rotationY: -90,
+            zIndex: 10
+          });
+        }
+      }, 'hold+=0.5');
+
+      loop.to(isXImage, {
+        rotationY: 0,
+        duration: 0.35,
+        ease: 'power3.out'
+      });
+    }
+
+    playLoop();
   }
 
   function skipToEntrance() {
@@ -209,6 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: 'power2.inOut'
       }, 0.6);
     }
+
+    tl.add(() => startLoop(), '+=0.5');
   }
 
 });
