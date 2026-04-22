@@ -265,7 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function skipToEntrance() {
-    gsap.set(normalImages, { display: 'none' });
+    gsap.set('.loader_img-wrap', { perspective: 800 });
+    gsap.set(normalImages, { opacity: 0, visibility: 'hidden', x: 0, y: 0, rotation: 0, rotationY: 0 });
     gsap.set(loader, { pointerEvents: 'none' });
     gsap.set(isXImage, { opacity: 0, visibility: 'visible' });
 
