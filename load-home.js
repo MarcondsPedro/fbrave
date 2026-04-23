@@ -139,13 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
         stagger: { amount: 0.15, from: 'edges' }
       }, 'revealed');
 
+      tl.to(isXImage, {
+        rotationY: 90,
+        duration: 0.35,
+        ease: 'power3.in',
+        onComplete: () => {
+          gsap.set(isXImage, { visibility: 'hidden', rotationY: 0 });
+        }
+      }, 'revealed+=0.3');
+
       if (embed.length) {
         tl.to(embed, {
           y: '0%',
           ease: 'expo.out',
           duration: 1.2,
           stagger: { amount: 0.6, from: 'start' }
-        }, 0);
+        }, 'revealed+=0.3');
       }
 
       const fadeEls = [navbar, heroInfo].filter(Boolean);
@@ -154,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
           opacity: 1,
           duration: 1,
           ease: 'power2.inOut'
-        }, 'revealed+=0.4');
+        }, 'revealed+=0.6');
       }
 
       if (heroTitle) {
@@ -162,37 +171,31 @@ document.addEventListener('DOMContentLoaded', () => {
           opacity: 1,
           duration: 1,
           ease: 'power2.inOut'
-        }, 'revealed');
+        }, 'revealed+=0.3');
       }
 
       tl.add(() => {
-        gsap.set(loader, { pointerEvents: 'none' });
+        gsap.set(loader, { pointerEvents: 'none', display: 'none' });
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
         document.documentElement.style.height = '';
         document.body.style.height = '';
         document.body.style.pointerEvents = '';
         sessionStorage.setItem('loaderDone', 'true');
-      }, 'done+=0.5');
+      });
 
     }, 500);
   }
 
   function skipToEntrance() {
     gsap.set(normalImages, { opacity: 0, visibility: 'hidden' });
-    gsap.set(loader, { pointerEvents: 'none' });
-    gsap.set(isXImage, { opacity: 0, visibility: 'visible' });
+    gsap.set(loader, { pointerEvents: 'none', display: 'none' });
+    gsap.set(isXImage, { visibility: 'hidden' });
 
     gsap.set(embed, { y: '105%' });
     gsap.set([navbar, heroInfo, heroTitle].filter(Boolean), { opacity: 0 });
 
     const tl = gsap.timeline();
-
-    tl.to(isXImage, {
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power2.inOut'
-    }, 0);
 
     if (embed.length) {
       tl.to(embed, {
@@ -200,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: 'expo.out',
         duration: 1.2,
         stagger: { amount: 0.6, from: 'start' }
-      }, 0.4);
+      }, 0);
     }
 
     const fadeEls = [navbar, heroInfo, heroTitle].filter(Boolean);
@@ -209,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         opacity: 1,
         duration: 1,
         ease: 'power2.inOut'
-      }, 0.6);
+      }, 0.2);
     }
   }
 
